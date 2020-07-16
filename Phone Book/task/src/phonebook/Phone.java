@@ -7,6 +7,9 @@ public class Phone {
         this.name=name;
         this.phone=phone;
     }
+    public Phone(Phone phone){
+        this(phone.getPhone(),phone.getName());
+    }
 
     public String getName() {
         return name;
