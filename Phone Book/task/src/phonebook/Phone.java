@@ -1,6 +1,8 @@
 package phonebook;
 
-public class Phone {
+import org.jetbrains.annotations.NotNull;
+
+public class Phone{
     private String name;
     private String phone;
     public Phone(String phone,String name){
@@ -26,5 +28,4 @@ public class Phone {
     public void setPhone(String phone) {
         this.phone = phone;
     }
-
 }

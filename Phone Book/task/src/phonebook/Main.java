@@ -18,10 +18,11 @@ public class Main {
         Phones phones = Phones.loadPhones(Paths.get("c:\\Users\\EVA\\Downloads\\directory.txt"));
         List<String> names = Files.lines(Paths.get("c:\\Users\\EVA\\Downloads\\find.txt"), StandardCharsets.UTF_8)
                 .collect(Collectors.toList());
+        List<Phone> searchList = names.stream().map(name->new Phone(null,name)).collect(Collectors.toList());
 
         System.out.println("Start searching (linear search)...");
         long start=System.currentTimeMillis();
-        Phones filtered=phones.linearSearch(names);
+        Phones filtered=phones.linearSearch(searchList);
         Duration searchDuration= Duration.ofMillis(System.currentTimeMillis()-start);
         phones.setSortTimeLimit(searchDuration.toMillis()*10);
         System.out.printf("Found %d / %d entries. Time taken:  %s\n"
@@ -31,7 +32,6 @@ public class Main {
         );
 
         System.out.println("Start searching (bubble sort + jump search)...");
-
         Duration sortDuration;
         try{
             start=System.currentTimeMillis();
@@ -39,7 +39,7 @@ public class Main {
             sortDuration = Duration.ofMillis(System.currentTimeMillis()-start);
 
             start=System.currentTimeMillis();
-            filtered = phones.jumpSearch(names);
+            filtered = phones.jumpSearch(searchList);
             searchDuration = Duration.ofMillis(System.currentTimeMillis()-start);
             Duration searchAndSortDuration = sortDuration.plus(searchDuration);
 
@@ -54,7 +54,7 @@ public class Main {
         catch (IllegalStateException error){
             sortDuration = Duration.ofMillis(System.currentTimeMillis()-start);
             start=System.currentTimeMillis();
-            filtered = phones.linearSearch(names);
+            filtered = phones.linearSearch(searchList);
             searchDuration = Duration.ofMillis(System.currentTimeMillis()-start);
             Duration searchAndSortDuration = sortDuration.plus(searchDuration);
             System.out.printf("Found %d / %d entries. Time taken:  %s\n"
@@ -66,5 +66,24 @@ public class Main {
             System.out.printf("Searching time: %s\n",getTime(searchDuration));
 
         }
+
+        System.out.println("Start searching (quick sort + binary search)...");
+        phones = Phones.loadPhones(Paths.get("c:\\Users\\EVA\\Downloads\\directory.txt"));
+        start=System.currentTimeMillis();
+        phones.quickSort();
+        sortDuration = Duration.ofMillis(System.currentTimeMillis()-start);
+
+        start=System.currentTimeMillis();
+        filtered = phones.quickSearch(searchList);
+        searchDuration = Duration.ofMillis(System.currentTimeMillis()-start);
+        Duration searchAndSortDuration = sortDuration.plus(searchDuration);
+
+        System.out.printf("Found %d / %d entries. Time taken:  %s\n"
+                ,filtered.size()
+                ,names.size()
+                ,getTime(searchAndSortDuration)
+        );
+        System.out.printf("Sorting time: %s\n",getTime(sortDuration));
+        System.out.printf("Searching time: %s\n",getTime(searchDuration));
     }
 }
