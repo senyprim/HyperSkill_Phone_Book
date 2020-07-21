@@ -4,10 +4,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -15,6 +12,7 @@ import static java.nio.file.Files.lines;
 
 public class Phones {
     private List<Phone> phones;
+    private Map<String,Phone> index;
     private boolean sorted=false;
     private long sortTimeLimit;
 
@@ -179,4 +177,15 @@ public class Phones {
         return new Phones(names.stream().map(item->quickSearch(item, comparator)).collect(Collectors.toList()));
     }
     public Phones quickSearch(List<Phone> names){return quickSearch(names,defaultComparator);}
+
+    public void prepareMap(){
+        this.index = new HashMap<>();
+        for(Phone phone :this.phones){
+            index.put(phone.getName(),phone);
+        }
+    }
+
+    public Phone getPhoneFromMap(String key){
+        return index.get(key);
+    }
 }

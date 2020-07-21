@@ -25,7 +25,7 @@ public class Main {
         Phones filtered=phones.linearSearch(searchList);
         Duration searchDuration= Duration.ofMillis(System.currentTimeMillis()-start);
         phones.setSortTimeLimit(searchDuration.toMillis()*10);
-        System.out.printf("Found %d / %d entries. Time taken:  %s\n"
+        System.out.printf("Found %d / %d entries. Time taken:  %s\n\n"
                 ,filtered.size()
                 ,names.size()
                 ,getTime(searchDuration)
@@ -49,7 +49,7 @@ public class Main {
                     ,getTime(searchAndSortDuration)
             );
             System.out.printf("Sorting time: %s\n",getTime(sortDuration));
-            System.out.printf("Searching time: %s\n",getTime(sortDuration));
+            System.out.printf("Searching time: %s\n\n",getTime(sortDuration));
         }
         catch (IllegalStateException error){
             sortDuration = Duration.ofMillis(System.currentTimeMillis()-start);
@@ -63,7 +63,7 @@ public class Main {
                     ,getTime(searchAndSortDuration)
             );
             System.out.printf("Sorting time: %s - STOPPED, moved to linear search\n",getTime(sortDuration));
-            System.out.printf("Searching time: %s\n",getTime(searchDuration));
+            System.out.printf("Searching time: %s\n\n",getTime(searchDuration));
 
         }
 
@@ -84,6 +84,26 @@ public class Main {
                 ,getTime(searchAndSortDuration)
         );
         System.out.printf("Sorting time: %s\n",getTime(sortDuration));
-        System.out.printf("Searching time: %s\n",getTime(searchDuration));
+        System.out.printf("Searching time: %s\n\n",getTime(searchDuration));
+
+
+        System.out.println("Start searching (hash table)...");
+        phones = Phones.loadPhones(Paths.get("c:\\Users\\EVA\\Downloads\\directory.txt"));
+        start=System.currentTimeMillis();
+        phones.prepareMap();
+        sortDuration = Duration.ofMillis(System.currentTimeMillis()-start);
+
+        start=System.currentTimeMillis();
+        filtered = phones.quickSearch(searchList);
+        searchDuration = Duration.ofMillis(System.currentTimeMillis()-start);
+        searchAndSortDuration = sortDuration.plus(searchDuration);
+
+        System.out.printf("Found %d / %d entries. Time taken:  %s\n"
+                ,filtered.size()
+                ,names.size()
+                ,getTime(searchAndSortDuration)
+        );
+        System.out.printf("Creating time: %s\n",getTime(sortDuration));
+        System.out.printf("Searching time: %s\n\n",getTime(searchDuration));
     }
 }
